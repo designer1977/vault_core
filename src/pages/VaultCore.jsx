@@ -45,6 +45,7 @@ export default function VaultCore() {
             <a href="#generators" className="text-xs tracking-widest uppercase text-zinc-500 hover:text-zinc-200 transition-colors">Tools</a>
             <a href="#bulk" className="text-xs tracking-widest uppercase text-zinc-500 hover:text-zinc-200 transition-colors">Bulk</a>
             <a href="#security" className="text-xs tracking-widest uppercase text-zinc-500 hover:text-zinc-200 transition-colors">Security</a>
+            <a href="/security-logic" className="text-xs tracking-widest uppercase transition-colors" style={{ color: 'rgba(0,255,209,0.5)' }} onMouseEnter={e => e.target.style.color='#00FFD1'} onMouseLeave={e => e.target.style.color='rgba(0,255,209,0.5)'}>Docs</a>
             <div className="flex items-center gap-2">
               <span className="w-1.5 h-1.5 rounded-full animate-status" style={{ backgroundColor: '#00FFD1' }}></span>
               <span className="text-xs text-zinc-500 font-mono">LOCAL ONLY</span>

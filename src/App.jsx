@@ -8,6 +8,7 @@ import UserNotRegisteredError from '@/components/UserNotRegisteredError';
 import ScrollToTop from './components/ScrollToTop';
 // Add page imports here
 import VaultCore from './pages/VaultCore';
+import SecurityLogic from './pages/SecurityLogic';
 
 const AuthenticatedApp = () => {
   const { isLoadingAuth, isLoadingPublicSettings, authError, navigateToLogin } = useAuth();
@@ -36,6 +37,7 @@ const AuthenticatedApp = () => {
   return (
     <Routes>
       <Route path="/" element={<VaultCore />} />
+      <Route path="/security-logic" element={<SecurityLogic />} />
       <Route path="*" element={<PageNotFound />} />
     </Routes>
   );
