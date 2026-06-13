@@ -11,6 +11,7 @@ const GENERATORS = [
     fn: () => generateHex(128),
     bits: 128,
     color: '#00FFD1',
+    href: '/encryption-key-generator',
   },
   {
     id: 'hex256', label: '256-BIT HEX', category: 'ENCRYPTION',
@@ -18,6 +19,7 @@ const GENERATORS = [
     fn: () => generateHex(256),
     bits: 256,
     color: '#00FFD1',
+    href: '/encryption-key-generator',
   },
   {
     id: 'uuid', label: 'UUID v4', category: 'IDENTIFIER',
@@ -25,6 +27,7 @@ const GENERATORS = [
     fn: () => generateUUID(),
     bits: 122,
     color: '#a78bfa',
+    href: '/uuid-generator',
   },
   {
     id: 'apikey', label: 'API KEY', category: 'AUTH TOKEN',
@@ -32,6 +35,7 @@ const GENERATORS = [
     fn: () => generateAPIKey(),
     bits: 192,
     color: '#60a5fa',
+    href: '/api-key-generator',
   },
   {
     id: 'jwt', label: 'JWT SECRET', category: 'SIGNING KEY',
@@ -39,6 +43,7 @@ const GENERATORS = [
     fn: () => generateJWTSecret(),
     bits: 256,
     color: '#f59e0b',
+    href: '/jwt-secret-generator',
   },
   {
     id: 'alphanumeric', label: 'ALPHANUMERIC', category: 'SAFE STRING',
@@ -46,6 +51,7 @@ const GENERATORS = [
     fn: () => generateAlphanumeric(24),
     bits: 143,
     color: '#34d399',
+    href: null,
   },
   {
     id: 'password16', label: '16-CHAR PASSWORD', category: 'PASSWORD',
@@ -53,6 +59,7 @@ const GENERATORS = [
     fn: () => generatePassword(16, true),
     bits: 103,
     color: '#f97316',
+    href: '/password-generator',
   },
   {
     id: 'mnemonic', label: 'MNEMONIC PHRASE', category: 'PASSPHRASE',
@@ -60,6 +67,7 @@ const GENERATORS = [
     fn: () => generateMnemonic(4),
     bits: 39,
     color: '#e879f9',
+    href: null,
   },
 ];
 
@@ -157,6 +165,18 @@ function GeneratorCard({ gen, onCopy }) {
           {copied ? '✓ COPIED' : 'CLICK TO COPY'}
         </span>
       </div>
+      {gen.href && (
+        <a
+          href={gen.href}
+          onClick={e => e.stopPropagation()}
+          className="mt-3 text-xs tracking-widest uppercase transition-colors block"
+          style={{ color: '#3f3f46', fontFamily: 'JetBrains Mono, monospace' }}
+          onMouseEnter={e => e.target.style.color = gen.color}
+          onMouseLeave={e => e.target.style.color = '#3f3f46'}
+        >
+          View Guide →
+        </a>
+      )}
     </div>
   );
 }

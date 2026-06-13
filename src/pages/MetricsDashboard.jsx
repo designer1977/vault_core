@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { base44 } from '@/api/base44Client';
+import { useAuth } from '@/lib/AuthContext';
 
 const SLUGS = [
   '/', '/security-logic',
@@ -8,6 +9,7 @@ const SLUGS = [
 ];
 
 export default function MetricsDashboard() {
+  const { user } = useAuth();
   const [views, setViews] = useState([]);
   const [loading, setLoading] = useState(true);
   const [range, setRange] = useState(30);
@@ -51,6 +53,18 @@ export default function MetricsDashboard() {
   const refMap = {};
   views.forEach(v => { if (v.referrer) refMap[v.referrer] = (refMap[v.referrer] || 0) + 1; });
   const topRefs = Object.entries(refMap).sort((a, b) => b[1] - a[1]).slice(0, 5);
+
+  if (!user || user.role !== 'admin') {
+    return (
+      <div className="min-h-screen flex items-center justify-center" style={{ backgroundColor: '#050505' }}>
+        <div className="text-center p-8" style={{ border: '0.5px solid rgba(255,62,62,0.3)', background: 'rgba(255,62,62,0.04)' }}>
+          <p className="text-xs tracking-widest uppercase mb-2" style={{ color: '#FF3E3E' }}>Access Denied</p>
+          <p className="text-sm text-zinc-500">Admin access required.</p>
+          <a href="/" className="text-xs mt-4 inline-block tracking-widest uppercase" style={{ color: 'rgba(0,255,209,0.5)' }}>← Back to VaultCore</a>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="relative min-h-screen" style={{ backgroundColor: '#050505' }}>
