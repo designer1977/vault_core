@@ -46,9 +46,16 @@ export default function HeroGenerator({ onCopy }) {
     const newKey = generateForMode(m, l);
     keyRef.current = newKey;
     setKey(newKey);
-    // Estimate entropy level
-    const unique = new Set(newKey.split('')).size;
-    setEntropyLevel(Math.min(99, Math.round((unique / newKey.length) * 100 + 20)));
+    // Score based on actual cryptographic bit-strength, not character diversity
+    const bitStrengths = {
+      password: Math.min(99, Math.round((l / 128) * 79 + 20)),  // scales with length
+      hex256: 99,
+      hex128: 87,
+      jwt: 99,
+      apikey: 92,
+      uuid: 78,
+    };
+    setEntropyLevel(bitStrengths[m] ?? Math.min(99, Math.round((l / 128) * 79 + 20)));
     animateDecrypt(newKey);
   }, [mode, length]);
 
