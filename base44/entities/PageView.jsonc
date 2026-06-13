@@ -1,0 +1,17 @@
+{
+  "name": "PageView",
+  "type": "object",
+  "properties": {
+    "slug": {
+      "type": "string",
+      "description": "Page slug e.g. /jwt-secret-generator"
+    },
+    "referrer": {
+      "type": "string",
+      "description": "Referrer domain (not full URL)"
+    }
+  },
+  "required": [
+    "slug"
+  ]
+}

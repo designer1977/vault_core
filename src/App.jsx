@@ -9,6 +9,12 @@ import ScrollToTop from './components/ScrollToTop';
 // Add page imports here
 import VaultCore from './pages/VaultCore';
 import SecurityLogic from './pages/SecurityLogic';
+import JwtSecretGenerator from './pages/generators/JwtSecretGenerator';
+import ApiKeyGenerator from './pages/generators/ApiKeyGenerator';
+import EncryptionKeyGenerator from './pages/generators/EncryptionKeyGenerator';
+import UuidGenerator from './pages/generators/UuidGenerator';
+import PasswordGenerator from './pages/generators/PasswordGenerator';
+import MetricsDashboard from './pages/MetricsDashboard';
 
 const AuthenticatedApp = () => {
   const { isLoadingAuth, isLoadingPublicSettings, authError, navigateToLogin } = useAuth();
@@ -38,6 +44,12 @@ const AuthenticatedApp = () => {
     <Routes>
       <Route path="/" element={<VaultCore />} />
       <Route path="/security-logic" element={<SecurityLogic />} />
+      <Route path="/jwt-secret-generator" element={<JwtSecretGenerator />} />
+      <Route path="/api-key-generator" element={<ApiKeyGenerator />} />
+      <Route path="/encryption-key-generator" element={<EncryptionKeyGenerator />} />
+      <Route path="/uuid-generator" element={<UuidGenerator />} />
+      <Route path="/password-generator" element={<PasswordGenerator />} />
+      <Route path="/metrics" element={<MetricsDashboard />} />
       <Route path="*" element={<PageNotFound />} />
     </Routes>
   );

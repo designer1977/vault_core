@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useCallback, useRef } from 'react';
+import { usePageView } from '../hooks/usePageView';
 import EntropyStream from '../components/vault/EntropyStream';
 import HeroGenerator from '../components/vault/HeroGenerator';
 import GeneratorGrid from '../components/vault/GeneratorGrid';
@@ -8,6 +9,7 @@ import VaultFooter from '../components/vault/VaultFooter';
 import CopyRipple from '../components/vault/CopyRipple';
 
 export default function VaultCore() {
+  usePageView('/');
   const [ripples, setRipples] = useState([]);
 
   const triggerRipple = useCallback(() => {
