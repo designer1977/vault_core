@@ -17,13 +17,14 @@ function getRandomBytes(count) {
 }
 
 function randomFromSet(charset, length) {
-  const bytes = getRandomBytes(length * 2);
+  // Rejection sampling to eliminate modulo bias
+  const max = 256 - (256 % charset.length);
   let result = '';
-  let i = 0;
   while (result.length < length) {
-    const idx = bytes[i % bytes.length] % charset.length;
-    result += charset[idx];
-    i++;
+    const bytes = getRandomBytes(length * 2);
+    for (let i = 0; i < bytes.length && result.length < length; i++) {
+      if (bytes[i] < max) result += charset[bytes[i] % charset.length];
+    }
   }
   return result;
 }

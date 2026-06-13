@@ -113,7 +113,7 @@ export default function HeroGenerator({ onCopy }) {
     return '#FF3E3E';
   };
 
-  const glowIntensity = Math.floor((length / 128) * 100);
+  const glowIntensity = Math.floor((key.length / 128) * 100);
 
   return (
     <section className="relative z-10 min-h-screen flex flex-col items-center justify-center px-6 py-24">
