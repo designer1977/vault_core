@@ -46,16 +46,19 @@ export default function HeroGenerator({ onCopy }) {
     const newKey = generateForMode(m, l);
     keyRef.current = newKey;
     setKey(newKey);
-    // Score based on actual cryptographic bit-strength, not character diversity
+    // Score based on actual cryptographic bit-strength
+    // Password: charset ~94 symbols → log2(94^l) bits, map to 0-99 scale (max at 128 chars ≈ 820 bits)
+    const passwordBits = l * Math.log2(94);
+    const passwordScore = Math.min(99, Math.round((passwordBits / 820) * 99));
     const bitStrengths = {
-      password: Math.min(99, Math.round((l / 128) * 79 + 20)),  // scales with length
+      password: passwordScore,
       hex256: 99,
       hex128: 87,
       jwt: 99,
       apikey: 92,
       uuid: 78,
     };
-    setEntropyLevel(bitStrengths[m] ?? Math.min(99, Math.round((l / 128) * 79 + 20)));
+    setEntropyLevel(bitStrengths[m] ?? passwordScore);
     animateDecrypt(newKey);
   }, [mode, length]);
 
