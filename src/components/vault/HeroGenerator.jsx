@@ -47,9 +47,9 @@ export default function HeroGenerator({ onCopy }) {
     keyRef.current = newKey;
     setKey(newKey);
     // Score based on actual cryptographic bit-strength
-    // Password: charset ~94 symbols → log2(94^l) bits, map to 0-99 scale (max at 128 chars ≈ 820 bits)
+    // Password: charset ~94 symbols → log2(94^l) bits, map to scale where 32 chars ≈ 85%, 64 chars ≈ 99%
     const passwordBits = l * Math.log2(94);
-    const passwordScore = Math.min(99, Math.round((passwordBits / 820) * 99));
+    const passwordScore = Math.min(99, Math.round(40 + (passwordBits / 210) * 45));
     const bitStrengths = {
       password: passwordScore,
       hex256: 99,
