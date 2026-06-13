@@ -228,6 +228,92 @@ export default function SecurityLogic() {
           ))}
         </div>
 
+        {/* Key Type Comparison Table */}
+        <div className="mt-12 mb-4">
+          <p className="text-xs tracking-[0.4em] uppercase text-zinc-600 mb-2">Reference</p>
+          <h2 className="text-xl font-bold text-zinc-100 mb-6">Key Type Comparison</h2>
+          <div className="overflow-x-auto">
+            <table className="w-full text-xs" style={{ borderCollapse: 'collapse', fontFamily: 'JetBrains Mono, monospace' }}>
+              <thead>
+                <tr style={{ borderBottom: '0.5px solid rgba(255,255,255,0.08)' }}>
+                  {['Type', 'Bits', 'Score', 'Format', 'Best For'].map(h => (
+                    <th key={h} className="text-left py-3 px-4 text-zinc-600 tracking-widest uppercase font-normal">{h}</th>
+                  ))}
+                </tr>
+              </thead>
+              <tbody>
+                {[
+                  { type: '256-bit Hex', bits: '256', score: '99%', format: '64 hex chars', best: 'AES-256 keys, SHA-256 secrets' },
+                  { type: 'JWT Secret', bits: '256', score: '99%', format: 'Base64url string', best: 'HS256 / HS512 JWT signing' },
+                  { type: 'API Key', bits: '192', score: '92%', format: 'sk_live_… prefixed', best: 'Service auth tokens' },
+                  { type: '128-bit Hex', bits: '128', score: '87%', format: '32 hex chars', best: 'AES-128 keys, HMAC secrets' },
+                  { type: 'UUID v4', bits: '122', score: '78%', format: 'xxxxxxxx-…', best: 'Record IDs, session tokens' },
+                  { type: 'Password (32)', bits: '~210', score: '85%', format: 'Mixed charset', best: 'User passwords, passphrases' },
+                  { type: 'Alphanumeric', bits: '~143', score: '72%', format: 'URL-safe string', best: 'Invite codes, short tokens' },
+                  { type: 'Mnemonic (4)', bits: '~39', score: '44%', format: 'word-word-word-word', best: 'Human-readable phrases only' },
+                ].map((row, i) => (
+                  <tr key={i} style={{ borderBottom: '0.5px solid rgba(255,255,255,0.04)', background: i % 2 === 0 ? 'rgba(17,17,19,0.4)' : 'transparent' }}>
+                    <td className="py-3 px-4 text-zinc-300">{row.type}</td>
+                    <td className="py-3 px-4" style={{ color: '#00FFD1' }}>{row.bits}</td>
+                    <td className="py-3 px-4 text-zinc-400">{row.score}</td>
+                    <td className="py-3 px-4 text-zinc-600">{row.format}</td>
+                    <td className="py-3 px-4 text-zinc-500">{row.best}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        {/* Decision Guide */}
+        <div className="mt-12 mb-4">
+          <p className="text-xs tracking-[0.4em] uppercase text-zinc-600 mb-2">Chooser</p>
+          <h2 className="text-xl font-bold text-zinc-100 mb-6">Which Key Should I Use?</h2>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+            {[
+              { q: 'Signing JWTs (HS256/HS512)?', a: 'JWT Secret', color: '#f59e0b', why: 'Base64url-encoded 256-bit key, directly compatible with jsonwebtoken and jose libraries.' },
+              { q: 'Encrypting data with AES?', a: '256-bit Hex or 128-bit Hex', color: '#00FFD1', why: 'Raw hex keys slot directly into AES-256-GCM or AES-128-CBC without encoding overhead.' },
+              { q: 'Issuing API credentials to users?', a: 'API Key', color: '#60a5fa', why: 'Stripe-style sk_live_ prefix makes keys identifiable and easy to scan for in logs/code.' },
+              { q: 'Generating unique record IDs?', a: 'UUID v4', color: '#a78bfa', why: 'RFC 4122 compliant, natively supported in most databases and ORMs.' },
+              { q: 'Creating a user password?', a: 'Strong Password (32+ chars)', color: '#f97316', why: 'Full 94-char charset gives ~210 bits of entropy — vastly stronger than typical human passwords.' },
+              { q: 'Need something human-readable?', a: 'Mnemonic Phrase', color: '#e879f9', why: 'Lower entropy but memorable — suitable for verbal sharing or low-security access codes only.' },
+              { q: 'Building URL-safe tokens (invite links, etc.)?', a: 'Alphanumeric (24+)', color: '#34d399', why: 'No special characters that need URL-encoding; safe for query params and path segments.' },
+              { q: 'Maximum security secret (encryption at rest)?', a: '256-bit Hex', color: '#00FFD1', why: '256 bits is the standard ceiling for symmetric cryptography — 2²⁵⁶ possible values.' },
+            ].map((item, i) => (
+              <div key={i} className="p-4" style={{ border: `0.5px solid ${item.color}18`, background: `${item.color}04` }}>
+                <p className="text-xs text-zinc-500 mb-2 leading-relaxed">Q: {item.q}</p>
+                <p className="text-sm font-semibold mb-1" style={{ color: item.color }}>→ {item.a}</p>
+                <p className="text-xs text-zinc-600 leading-relaxed">{item.why}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        {/* Glossary */}
+        <div className="mt-12 mb-4">
+          <p className="text-xs tracking-[0.4em] uppercase text-zinc-600 mb-2">Reference</p>
+          <h2 className="text-xl font-bold text-zinc-100 mb-6">Glossary</h2>
+          <div className="space-y-0">
+            {[
+              { term: 'CSPRNG', def: 'Cryptographically Secure Pseudo-Random Number Generator. A random number generator that produces output indistinguishable from true randomness and is safe for security-sensitive use.' },
+              { term: 'Entropy', def: 'A measure of unpredictability, expressed in bits. Higher entropy means more possible values and a harder brute-force attack. 128 bits is the practical security floor; 256 bits is the gold standard.' },
+              { term: 'Modulo Bias', def: 'A statistical skew that occurs when you use the modulo operator to map a random number to a range that doesn\'t divide evenly. Some values appear slightly more often, reducing effective entropy.' },
+              { term: 'Rejection Sampling', def: 'A technique to eliminate modulo bias. Random values outside a "fair" range are discarded and redrawn until a valid, unbiased value is obtained.' },
+              { term: 'Uint8Array', def: 'A JavaScript typed array holding 8-bit unsigned integers (0–255). Used to receive raw random bytes from window.crypto.getRandomValues().' },
+              { term: 'Base64url', def: 'A variant of Base64 encoding that replaces + with - and / with _, and omits padding (=), making the output safe for use in URLs and HTTP headers.' },
+              { term: 'RFC 4122', def: 'The specification defining UUID (Universally Unique Identifier) formats. UUID v4 uses 122 bits of random data, with 6 bits reserved for version/variant flags.' },
+              { term: 'AES-256', def: 'Advanced Encryption Standard with a 256-bit key. The industry standard for symmetric encryption, used in TLS, disk encryption, and password managers.' },
+              { term: 'HS256 / HS512', def: 'HMAC-based JWT signing algorithms using SHA-256 or SHA-512. Require a shared secret key — the JWT Secret format in VaultCore is designed for this purpose.' },
+              { term: 'Shannon Entropy', def: 'A formula from information theory: H = L × log₂(N), where L is the string length and N is the charset size. Measures the theoretical unpredictability of a generated value.' },
+            ].map((item, i) => (
+              <div key={i} className="flex gap-4 py-4" style={{ borderBottom: '0.5px solid rgba(255,255,255,0.04)' }}>
+                <span className="text-xs font-semibold shrink-0 w-32 pt-0.5" style={{ color: '#00FFD1', fontFamily: 'JetBrains Mono, monospace' }}>{item.term}</span>
+                <p className="text-xs text-zinc-500 leading-relaxed">{item.def}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+
         {/* Footer note */}
         <div className="mt-12 p-5" style={{ border: '0.5px solid rgba(0,255,209,0.1)', background: 'rgba(0,255,209,0.02)' }}>
           <p className="text-xs text-zinc-500 leading-relaxed">

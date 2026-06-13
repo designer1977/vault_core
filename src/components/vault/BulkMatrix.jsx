@@ -81,6 +81,27 @@ export default function BulkMatrix({ onCopy }) {
     URL.revokeObjectURL(url);
   };
 
+  const downloadJSON = () => {
+    const content = JSON.stringify(keys.map((k, i) => ({ index: i + 1, type, key: k })), null, 2);
+    const blob = new Blob([content], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `vault_core_${type}_${Date.now()}.json`;
+    a.click();
+    URL.revokeObjectURL(url);
+  };
+
+  const downloadTXT = () => {
+    const blob = new Blob([keys.join('\n')], { type: 'text/plain' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `vault_core_${type}_${Date.now()}.txt`;
+    a.click();
+    URL.revokeObjectURL(url);
+  };
+
   return (
     <section id="bulk" className="relative z-10 px-6 py-16 max-w-7xl mx-auto">
       {/* Section header */}
@@ -246,15 +267,29 @@ export default function BulkMatrix({ onCopy }) {
           <button
             onClick={downloadCSV}
             className="px-5 py-2 text-xs tracking-widest uppercase transition-all"
-            style={{
-              border: '0.5px solid rgba(255,255,255,0.07)',
-              color: '#52525b',
-              fontFamily: 'JetBrains Mono, monospace',
-            }}
+            style={{ border: '0.5px solid rgba(255,255,255,0.07)', color: '#52525b', fontFamily: 'JetBrains Mono, monospace' }}
             onMouseEnter={e => { e.target.style.color = '#d4d4d8'; e.target.style.borderColor = 'rgba(255,255,255,0.15)'; }}
             onMouseLeave={e => { e.target.style.color = '#52525b'; e.target.style.borderColor = 'rgba(255,255,255,0.07)'; }}
           >
             DOWNLOAD .CSV
+          </button>
+          <button
+            onClick={downloadJSON}
+            className="px-5 py-2 text-xs tracking-widest uppercase transition-all"
+            style={{ border: '0.5px solid rgba(255,255,255,0.07)', color: '#52525b', fontFamily: 'JetBrains Mono, monospace' }}
+            onMouseEnter={e => { e.target.style.color = '#d4d4d8'; e.target.style.borderColor = 'rgba(255,255,255,0.15)'; }}
+            onMouseLeave={e => { e.target.style.color = '#52525b'; e.target.style.borderColor = 'rgba(255,255,255,0.07)'; }}
+          >
+            DOWNLOAD .JSON
+          </button>
+          <button
+            onClick={downloadTXT}
+            className="px-5 py-2 text-xs tracking-widest uppercase transition-all"
+            style={{ border: '0.5px solid rgba(255,255,255,0.07)', color: '#52525b', fontFamily: 'JetBrains Mono, monospace' }}
+            onMouseEnter={e => { e.target.style.color = '#d4d4d8'; e.target.style.borderColor = 'rgba(255,255,255,0.15)'; }}
+            onMouseLeave={e => { e.target.style.color = '#52525b'; e.target.style.borderColor = 'rgba(255,255,255,0.07)'; }}
+          >
+            DOWNLOAD .TXT
           </button>
           <span className="ml-auto text-xs text-zinc-700 font-mono">{keys.length} keys · {(keys.join('').length / 1024).toFixed(1)}KB</span>
         </div>

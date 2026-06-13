@@ -39,13 +39,20 @@ export default function HeroGenerator({ onCopy }) {
   const [copied, setCopied] = useState(false);
   const [isAnimating, setIsAnimating] = useState(false);
   const [entropyLevel, setEntropyLevel] = useState(85);
+  const [isEditing, setIsEditing] = useState(false);
+  const [editedKey, setEditedKey] = useState('');
+  const [isEdited, setIsEdited] = useState(false);
   const animFrameRef = useRef(null);
   const keyRef = useRef('');
+  const editRef = useRef(null);
 
   const generate = useCallback((m = mode, l = length) => {
     const newKey = generateForMode(m, l);
     keyRef.current = newKey;
     setKey(newKey);
+    setIsEdited(false);
+    setIsEditing(false);
+    setEditedKey('');
     // Score based on actual cryptographic bit-strength
     // Password: charset ~94 symbols → log2(94^l) bits, map to scale where 32 chars ≈ 85%, 64 chars ≈ 99%
     const passwordBits = l * Math.log2(94);
@@ -89,12 +96,46 @@ export default function HeroGenerator({ onCopy }) {
   }, []);
 
   const handleCopy = () => {
-    if (!key) return;
-    navigator.clipboard.writeText(key);
+    const val = isEdited ? editedKey : key;
+    if (!val) return;
+    navigator.clipboard.writeText(val);
     setCopied(true);
     onCopy && onCopy();
     setTimeout(() => setCopied(false), 2000);
   };
+
+  const handleEditStart = () => {
+    if (isAnimating) return;
+    setEditedKey(key);
+    setIsEditing(true);
+    setTimeout(() => editRef.current?.focus(), 50);
+  };
+
+  const handleEditChange = (e) => {
+    setEditedKey(e.target.value);
+    setIsEdited(e.target.value !== key);
+  };
+
+  const handleEditBlur = () => {
+    setIsEditing(false);
+    if (editedKey === key) setIsEdited(false);
+  };
+
+  // Keyboard shortcuts: Space = regenerate, Escape = cancel edit
+  useEffect(() => {
+    const handler = (e) => {
+      if (isEditing) {
+        if (e.key === 'Escape') { setIsEditing(false); setIsEdited(false); setEditedKey(''); }
+        return;
+      }
+      if (e.key === ' ' && e.target === document.body) {
+        e.preventDefault();
+        generate(mode, length);
+      }
+    };
+    window.addEventListener('keydown', handler);
+    return () => window.removeEventListener('keydown', handler);
+  }, [isEditing, mode, length, generate]);
 
   const handleModeChange = (m) => {
     setMode(m);
@@ -191,17 +232,60 @@ export default function HeroGenerator({ onCopy }) {
           </div>
 
           {/* Key output */}
-          <div
-            className="key-display text-lg md:text-2xl text-zinc-100 min-h-[3rem] leading-relaxed break-all mb-6 select-all"
-            style={{
-              fontFamily: 'JetBrains Mono, monospace',
-              fontSize: key.length > 48 ? '14px' : key.length > 32 ? '16px' : '20px',
-              textShadow: isAnimating ? '0 0 8px rgba(0,255,209,0.3)' : 'none',
-              transition: 'text-shadow 0.3s ease',
-              lineHeight: '1.6',
-            }}
-          >
-            {displayKey || '—'}
+          <div className="relative mb-6 group/edit">
+            {isEditing ? (
+              <textarea
+                ref={editRef}
+                value={editedKey}
+                onChange={handleEditChange}
+                onBlur={handleEditBlur}
+                rows={3}
+                className="w-full bg-transparent resize-none outline-none break-all leading-relaxed"
+                style={{
+                  fontFamily: 'JetBrains Mono, monospace',
+                  fontSize: key.length > 48 ? '14px' : key.length > 32 ? '16px' : '20px',
+                  color: '#00FFD1',
+                  border: '0.5px solid rgba(0,255,209,0.3)',
+                  padding: '8px',
+                  lineHeight: '1.6',
+                  caretColor: '#00FFD1',
+                }}
+              />
+            ) : (
+              <div
+                className="key-display text-lg md:text-2xl min-h-[3rem] leading-relaxed break-all select-all cursor-text"
+                onClick={handleEditStart}
+                title="Click to edit"
+                style={{
+                  fontFamily: 'JetBrains Mono, monospace',
+                  fontSize: key.length > 48 ? '14px' : key.length > 32 ? '16px' : '20px',
+                  textShadow: isAnimating ? '0 0 8px rgba(0,255,209,0.3)' : 'none',
+                  transition: 'text-shadow 0.3s ease',
+                  lineHeight: '1.6',
+                  color: isEdited ? '#00FFD1' : undefined,
+                }}
+              >
+                {isEdited ? editedKey : (displayKey || '—')}
+              </div>
+            )}
+            {/* Edit hint */}
+            {!isAnimating && !isEditing && (
+              <span className="absolute top-0 right-0 text-xs text-zinc-700 opacity-0 group-hover/edit:opacity-100 transition-opacity select-none"
+                style={{ fontFamily: 'JetBrains Mono, monospace' }}>
+                {isEdited ? '● EDITED' : 'CLICK TO EDIT'}
+              </span>
+            )}
+            {isEdited && !isEditing && (
+              <button
+                onClick={() => { setIsEdited(false); setEditedKey(''); }}
+                className="absolute top-0 right-0 text-xs transition-colors"
+                style={{ color: '#52525b', fontFamily: 'JetBrains Mono, monospace' }}
+                onMouseEnter={e => e.target.style.color = '#FF3E3E'}
+                onMouseLeave={e => e.target.style.color = '#52525b'}
+              >
+                ✕ RESET
+              </button>
+            )}
           </div>
 
           {/* Entropy bar */}
@@ -283,8 +367,13 @@ export default function HeroGenerator({ onCopy }) {
       </div>
 
       {/* Hint */}
-      <p className="text-xs text-zinc-700 tracking-widest z-10">
+      <p className="text-xs text-zinc-700 tracking-widest z-10 mb-2">
         Generated using <span className="text-zinc-500">window.crypto.getRandomValues()</span> — never transmitted
+      </p>
+      <p className="text-xs z-10 flex gap-4" style={{ color: '#27272a' }}>
+        <span><kbd className="px-1 py-0.5 text-zinc-600" style={{ border: '0.5px solid rgba(255,255,255,0.08)', borderRadius: '2px' }}>Space</kbd> regenerate</span>
+        <span><kbd className="px-1 py-0.5 text-zinc-600" style={{ border: '0.5px solid rgba(255,255,255,0.08)', borderRadius: '2px' }}>Click</kbd> edit key</span>
+        <span><kbd className="px-1 py-0.5 text-zinc-600" style={{ border: '0.5px solid rgba(255,255,255,0.08)', borderRadius: '2px' }}>Esc</kbd> cancel edit</span>
       </p>
     </section>
   );
