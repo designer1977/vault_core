@@ -1,5 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { generateBulk } from '../../lib/cryptoEngine';
+import { useTrackEvent } from '../../hooks/useTrackEvent';
 
 const BULK_TYPES = [
   { id: 'password', label: 'Passwords' },
@@ -13,6 +14,7 @@ const BULK_TYPES = [
 ];
 
 export default function BulkMatrix({ onCopy }) {
+  const track = useTrackEvent();
   const [type, setType] = useState('password');
   const [count, setCount] = useState(20);
   const [keys, setKeys] = useState([]);
@@ -47,6 +49,7 @@ export default function BulkMatrix({ onCopy }) {
 
   const copyAll = () => {
     navigator.clipboard.writeText(keys.join('\n'));
+    track('bulk_keys_copied');
     setCopiedAll(true);
     onCopy && onCopy();
     setTimeout(() => setCopiedAll(false), 2000);
@@ -60,6 +63,7 @@ export default function BulkMatrix({ onCopy }) {
   };
 
   const downloadEnv = () => {
+    track('bulk_keys_downloaded');
     const content = keys.map((k, i) => `KEY_${String(i + 1).padStart(3, '0')}=${k}`).join('\n');
     const blob = new Blob([content], { type: 'text/plain' });
     const url = URL.createObjectURL(blob);

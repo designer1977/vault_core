@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useCallback, useRef } from 'react';
 import { usePageView } from '../hooks/usePageView';
+import { useTrackEvent } from '../hooks/useTrackEvent';
 import EntropyStream from '../components/vault/EntropyStream';
 import HeroGenerator from '../components/vault/HeroGenerator';
 import GeneratorGrid from '../components/vault/GeneratorGrid';
@@ -10,16 +11,18 @@ import CopyRipple from '../components/vault/CopyRipple';
 
 export default function VaultCore() {
   usePageView('/');
+  const track = useTrackEvent();
   const [ripples, setRipples] = useState([]);
 
   const triggerRipple = useCallback(() => {
+    track('hero_key_copied');
     const id = Date.now();
     const x = Math.random() * window.innerWidth;
     const y = Math.random() * window.innerHeight;
     const size = Math.max(window.innerWidth, window.innerHeight) * 2.5;
     setRipples(prev => [...prev, { id, x, y, size }]);
     setTimeout(() => setRipples(prev => prev.filter(r => r.id !== id)), 1200);
-  }, []);
+  }, [track]);
 
   return (
     <div className="relative min-h-screen overflow-x-hidden" style={{ backgroundColor: '#050505' }}>

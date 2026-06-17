@@ -13,6 +13,7 @@ export default function ApiKeyGenerator() {
       bits={192}
       score="92%"
       usage="Service authentication tokens"
+      eventName="api_key"
       generate={generateAPIKey}
       faq={[
         { q: 'Why the sk_live_ prefix?', a: 'Prefixes make API keys identifiable in logs, code reviews, and secret scanners (like GitHub\'s secret scanning). The sk_live_ convention is popularised by Stripe.' },

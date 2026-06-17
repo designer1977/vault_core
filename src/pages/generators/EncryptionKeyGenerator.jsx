@@ -14,6 +14,7 @@ export default function EncryptionKeyGenerator() {
       bits={bits}
       score={bits === 256 ? '99%' : '87%'}
       usage={`AES-${bits}-GCM encryption`}
+      eventName="encryption_key"
       generate={() => generateHex(bits)}
       extraControls={
         <div className="flex items-center gap-3 mb-4">

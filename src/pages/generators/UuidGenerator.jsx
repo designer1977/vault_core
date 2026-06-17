@@ -13,6 +13,7 @@ export default function UuidGenerator() {
       bits={122}
       score="78%"
       usage="Database IDs, session tokens, idempotency keys"
+      eventName="uuid"
       generate={generateUUID}
       faq={[
         { q: 'What is UUID v4?', a: 'A Universally Unique Identifier using 122 random bits (6 bits are reserved for version/variant flags per RFC 4122). The probability of collision across 1 billion UUIDs is astronomically small.' },

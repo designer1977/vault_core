@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
+import { useTrackEvent } from '../../hooks/useTrackEvent';
 
 const SCRAMBLE = '0123456789ABCDEFabcdef!@#$%^&*_+-';
 
@@ -8,11 +9,14 @@ function scramble(target, progress) {
   ).join('');
 }
 
-export default function GeneratorPageLayout({ title, subtitle, bits, score, usage, generate, extraControls, faq }) {
+export default function GeneratorPageLayout({ title, subtitle, bits, score, usage, generate, extraControls, faq, eventName }) {
+  const track = useTrackEvent();
   const [key, setKey] = useState('');
   const [display, setDisplay] = useState('');
   const [copied, setCopied] = useState(false);
   const frameRef = useRef(null);
+
+  const eventLabel = eventName || 'generator_key';
 
   const runGenerate = () => {
     const k = generate();
@@ -34,6 +38,7 @@ export default function GeneratorPageLayout({ title, subtitle, bits, score, usag
   const handleCopy = () => {
     if (!key) return;
     navigator.clipboard.writeText(key);
+    track(`${eventLabel}_copied`);
     setCopied(true);
     setTimeout(() => setCopied(false), 2000);
   };
@@ -95,7 +100,7 @@ export default function GeneratorPageLayout({ title, subtitle, bits, score, usag
             </div>
             <div className="flex gap-3">
               <button
-                onClick={runGenerate}
+                onClick={() => { track(`${eventLabel}_regenerated`); runGenerate(); }}
                 className="px-5 py-2.5 text-xs tracking-widest uppercase transition-all"
                 style={{ border: '0.5px solid rgba(255,255,255,0.1)', color: '#71717a', background: 'rgba(255,255,255,0.02)', fontFamily: 'JetBrains Mono, monospace' }}
                 onMouseEnter={e => { e.currentTarget.style.color = '#e4e4e7'; e.currentTarget.style.borderColor = 'rgba(255,255,255,0.2)'; }}

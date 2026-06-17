@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { generatePassword, generateHex, generateBase64, generateUUID, generateAPIKey, generateJWTSecret } from '../../lib/cryptoEngine';
+import { useTrackEvent } from '../../hooks/useTrackEvent';
 
 const MODES = [
   { id: 'password', label: 'STRONG PASSWORD', bits: null },
@@ -32,6 +33,7 @@ function generateForMode(mode, length) {
 }
 
 export default function HeroGenerator({ onCopy }) {
+  const track = useTrackEvent();
   const [mode, setMode] = useState('password');
   const [length, setLength] = useState(32);
   const [key, setKey] = useState('');
@@ -334,7 +336,7 @@ export default function HeroGenerator({ onCopy }) {
             {/* Action buttons */}
             <div className="flex gap-3">
               <button
-                onClick={() => generate(mode, length)}
+                onClick={() => { track('hero_key_regenerated'); generate(mode, length); }}
                 className="px-6 py-3 text-xs tracking-widest uppercase font-semibold transition-all"
                 style={{
                   border: '0.5px solid rgba(255,255,255,0.1)',

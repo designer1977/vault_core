@@ -14,6 +14,7 @@ export default function PasswordGenerator() {
       bits={Math.round(length * Math.log2(94))}
       score={`${Math.min(99, Math.round(40 + (length * Math.log2(94)) / 210 * 45))}%`}
       usage="User passwords, service credentials, master keys"
+      eventName="password"
       generate={() => generatePassword(length, true)}
       extraControls={
         <div className="mb-4">

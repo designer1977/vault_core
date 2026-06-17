@@ -13,6 +13,7 @@ export default function JwtSecretGenerator() {
       bits={256}
       score="99%"
       usage="HS256 / HS512 JWT signing"
+      eventName="jwt_secret"
       generate={generateJWTSecret}
       faq={[
         { q: 'What algorithm should I use with this secret?', a: 'HS256 (HMAC-SHA256) or HS512 (HMAC-SHA512). Both use a symmetric shared secret — this generator produces a 256-bit key, which is appropriate for both.' },

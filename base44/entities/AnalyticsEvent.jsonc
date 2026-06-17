@@ -1,0 +1,13 @@
+{
+  "name": "AnalyticsEvent",
+  "type": "object",
+  "properties": {
+    "name": {
+      "type": "string",
+      "description": "Event name (e.g. hero_copy_clicked, password_generated)"
+    }
+  },
+  "required": [
+    "name"
+  ]
+}
