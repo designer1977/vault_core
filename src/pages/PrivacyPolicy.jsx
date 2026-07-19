@@ -37,22 +37,17 @@ export default function PrivacyPolicy() {
           </section>
 
           <section>
-            <h2 className="text-lg font-semibold text-zinc-100 mb-3">3. Analytics</h2>
-            <p>We track anonymous page views and usage statistics (such as which generator tools are used) to improve the service. This data includes page URLs visited and basic interaction events. No generated keys or personal data are included in these analytics.</p>
-          </section>
-
-          <section>
-            <h2 className="text-lg font-semibold text-zinc-100 mb-3">4. Cookies & Local Storage</h2>
+            <h2 className="text-lg font-semibold text-zinc-100 mb-3">3. Cookies & Local Storage</h2>
             <p>VaultCore does not use cookies, localStorage, sessionStorage, or any other browser storage mechanism to persist generated keys, user preferences, or tracking data. Each session is stateless by design.</p>
           </section>
 
           <section>
-            <h2 className="text-lg font-semibold text-zinc-100 mb-3">5. Third-Party Services</h2>
+            <h2 className="text-lg font-semibold text-zinc-100 mb-3">4. Third-Party Services</h2>
             <p>VaultCore does not integrate with third-party analytics, advertising, or tracking services. No external scripts are loaded beyond what is required for the application to function.</p>
           </section>
 
           <section>
-            <h2 className="text-lg font-semibold text-zinc-100 mb-3">6. Contact</h2>
+            <h2 className="text-lg font-semibold text-zinc-100 mb-3">5. Contact</h2>
             <p>If you have questions about this privacy policy, contact us at privacy@vaultcore.tools.</p>
           </section>
         </div>

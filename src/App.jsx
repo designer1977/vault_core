@@ -14,7 +14,6 @@ import ApiKeyGenerator from './pages/generators/ApiKeyGenerator';
 import EncryptionKeyGenerator from './pages/generators/EncryptionKeyGenerator';
 import UuidGenerator from './pages/generators/UuidGenerator';
 import PasswordGenerator from './pages/generators/PasswordGenerator';
-import MetricsDashboard from './pages/MetricsDashboard';
 import PrivacyPolicy from './pages/PrivacyPolicy';
 import TermsOfService from './pages/TermsOfService';
 
@@ -51,7 +50,6 @@ const AuthenticatedApp = () => {
       <Route path="/encryption-key-generator" element={<EncryptionKeyGenerator />} />
       <Route path="/uuid-generator" element={<UuidGenerator />} />
       <Route path="/password-generator" element={<PasswordGenerator />} />
-      <Route path="/metrics" element={<MetricsDashboard />} />
       <Route path="/privacy" element={<PrivacyPolicy />} />
       <Route path="/terms" element={<TermsOfService />} />
       <Route path="*" element={<PageNotFound />} />
