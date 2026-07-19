@@ -52,6 +52,15 @@ export default function VaultFooter() {
           <div className="flex items-center gap-6">
             <a href="/privacy" className="text-xs text-zinc-600 hover:text-zinc-300 transition-colors font-mono">Privacy Policy</a>
             <a href="/terms" className="text-xs text-zinc-600 hover:text-zinc-300 transition-colors font-mono">Terms of Service</a>
+            {/* Added Source Code link */}
+            <a
+              href="https://github.com/designer1977/vault_core"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-xs text-zinc-600 hover:text-zinc-300 transition-colors font-mono"
+            >
+              Source Code
+            </a>
             <div className="flex items-center gap-2">
               <span className="w-1.5 h-1.5 rounded-full animate-status" style={{ background: '#00FFD1' }}></span>
               <span className="text-xs text-zinc-600 font-mono">All systems local</span>
